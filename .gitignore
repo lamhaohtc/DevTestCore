@@ -1,0 +1,12 @@
+packages/
+bin/
+obj/
+logs/
+.vs/
+.idea/
+*.suo
+*.bak
+*.user
+*.log
+*.pdb
+*.pubxml
