@@ -1,13 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Src.Helpers;
-using Src.Services;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Src.Services
 {

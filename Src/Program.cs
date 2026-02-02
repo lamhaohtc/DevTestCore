@@ -6,21 +6,27 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-// 👇 CORS with specific origins
+// 👇 Read CORS origins from appsettings.json
+var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+
+// If no origins configured, use default development origins
+if (corsOrigins == null || corsOrigins.Length == 0)
+{
+    corsOrigins = new[] { "http://localhost:8080", "https://localhost:8080" };
+    Console.WriteLine("⚠️ No CORS origins configured in appsettings.json. Using defaults: " + string.Join(", ", corsOrigins));
+}
+
+Console.WriteLine($"✅ CORS Origins configured: {string.Join(", ", corsOrigins)}");
+
+// Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowVueApp", policy =>
     {
-        // List all the origins you want to allow
-        policy.WithOrigins(
-                "http://localhost:8080",    // Vue dev server (HTTP)
-                "https://localhost:8080",   // Vue dev server (HTTPS)
-                "http://localhost:3000",    // Alternative Vue port
-                "https://localhost:3000"    // Alternative Vue port (HTTPS)
-            )
-            .AllowAnyMethod()               // Allow all HTTP methods
-            .AllowAnyHeader()               // Allow all headers
-            .AllowCredentials();            // Allow credentials (cookies, auth headers)
+        policy.WithOrigins(corsOrigins)
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
 });
 
@@ -32,14 +38,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    Console.WriteLine("🚀 Running in Development mode");
 }
 
 app.UseHttpsRedirection();
-
 app.UseCors("AllowVueApp");
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

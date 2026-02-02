@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-
-namespace Src.Services
+﻿namespace Src.Services
 {
     /// <summary>
     /// Interface for file upload services
